@@ -42,8 +42,16 @@ public class Main {
     }
 
     static void loadData(){
-        File userFile = new File("src/user-info.txt");
-        File postsFile = new File("src/post-info.txt");
+        String userInfo, postInfo;
+        Scanner prompt = new Scanner(System.in);
+        System.out.print("Enter the name of the user info file: ");
+        userInfo = prompt.nextLine();
+        System.out.print("Enter the name of the post info file: ");
+        postInfo = prompt.nextLine();
+        userInfo = "src/" + userInfo;
+        postInfo = "src/" + postInfo;
+        File userFile = new File(userInfo);
+        File postsFile = new File(postInfo);
         String username, name, state, friendsList;
         String postID, userID, visibility;
         Pattern friendsPattern = Pattern.compile("[\\[\\],]");

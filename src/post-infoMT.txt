@@ -1,0 +1,3 @@
+post1;dogman1;public
+post2;catgirl1;public
+post3;ratboy1;friend
