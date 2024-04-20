@@ -1,0 +1,325 @@
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <string>
+#include <sstream>
+using namespace std;
+
+class User {
+	public:
+		User();
+		User(string username2, string displayName2, string state2, vector<string> friends2);
+		string getUsername();
+		void setUsername(string username2);
+		string getDisplayName();
+		void setDisplayName(string displayName2);
+		string getState();
+		void setState(string state2);
+		vector<string> getFriends();
+		void setFriends(vector<string> friends2);
+	private:
+		string username;
+		string displayName;
+		string state;
+		vector<string> friends;
+};
+
+class Post {
+	public:
+		Post();
+		Post(string postID2, string userID2, string visibility2);
+		string getPostID();
+		void setPostID(string postID2);
+		string getUserID();
+		void setUserID(string userID2);
+		string getVisibility();
+		void setVisibility(string visibility2);
+	private:
+		string postID;
+		string userID;
+		string visibility;
+};
+
+vector<User> users;
+vector<Post> posts;
+
+void loadInputData(string usersFile, string postsFile);
+bool checkVisibility(string postID, string username);
+vector<Post> retrievePosts(string username);
+vector<User> searchUsersByLocation(string location);
+void exit();
+
+int main() {
+	int function;
+	do{
+		cout << "Welcome to PawsConnect! These are some of the available functions!\n";
+		cout << "\t1) Load Input Data\n";
+		cout << "\t2) Check Visibility\n";
+		cout << "\t3) Retrieve Posts\n";
+		cout << "\t4) Search Users By Location\n";
+		cout << "\t5) Exit\n";
+		cout << "Enter Function Number: ";
+		cin >> function;
+		if(function == 1){
+			string usersFile;
+			cout << "User Data File: ";
+			cin >> usersFile;
+			string postsFile;
+			cout << "Post Data File: ";
+			cin >> postsFile;
+			loadInputData(usersFile, postsFile);
+		}
+		if(function == 2){
+			string postID;
+			cout << "Post ID: ";
+			cin >> postID;
+			string username;
+			cout << "Username: ";
+			cin >> username;
+			cout << "Access ";
+			if(checkVisibility(postID, username)){
+				cout << "Permitted";
+			}else{
+				cout << "Denied";
+			}
+		}
+		if(function == 3){
+			string username;
+			cout << "Username: ";
+			cin >> username;
+			vector<Post> visiblePosts = retrievePosts(username);
+			for(int p = 0; p < visiblePosts.size(); p++){
+				cout << visiblePosts[p].getPostID() << "\n";
+			}
+		}
+		if(function == 4){
+			string state;
+			cout << "State: ";
+			cin >> state;
+			vector<User> stateBasedUsers = searchUsersByLocation(state);
+			for(int u = 0; u < stateBasedUsers.size(); u++){
+				cout << stateBasedUsers[u].getUsername() << "\n";
+			}
+		}
+		cout << "\n\n";
+	} while(function != 5);
+}
+
+
+// User Constructors
+User::User() {
+	username = "";
+	displayName = "";
+	state = "";
+	friends = {};
+}
+
+User::User(string username2, string displayName2, string state2, vector<string> friends2) {
+	username = username2;
+	displayName = displayName2;
+	state = state2;
+	friends = friends2;
+}
+
+
+// User Getters And Setters
+string User::getUsername() {
+	return username;
+}
+
+void User::setUsername(string username2) {
+	username = username2;
+}
+
+string User::getDisplayName() {
+	return displayName;
+}
+
+void User::setDisplayName(string displayName2) {
+	displayName = displayName2;
+}
+
+string User::getState() {
+	return state;
+}
+
+void User::setState(string state2) {
+	state = state2;
+}
+
+vector<string> User::getFriends() {
+	return friends;
+}
+
+void User::setFriends(vector<string> friends2) {
+	friends = friends2;
+}
+
+
+// Post Constructors
+Post::Post() {
+	postID = "";
+	userID = "";
+	visibility = "";
+}
+
+Post::Post(string postID2, string userID2, string visibility2) {
+	postID = postID2;
+	userID = userID2;
+	visibility = visibility2;
+}
+
+
+// Post Getters And Setters
+string Post::getPostID() {
+	return postID;
+}
+
+void Post::setPostID(string postID2) {
+	postID = postID2;
+}
+
+string Post::getUserID() {
+	return userID;
+}
+
+void Post::setUserID(string userID2) {
+	userID = userID2;
+}
+
+string Post::getVisibility() {
+	return visibility;
+}
+
+void Post::setVisibility(string visibility2) {
+	visibility = visibility2;
+}
+
+
+// Main Functions
+bool checkVisibility(string postID, string username){
+	// Post
+	Post post;
+	for(int p = 0; p < posts.size(); p++){
+		if(posts[p].getPostID() == postID){
+			post = posts[p];
+			break;
+		}
+	}
+
+	// User
+	User user;
+	for(int u = 0; u < users.size(); u++){
+		if(users[u].getUsername() == post.getUserID()){
+			user = users[u];
+		}
+	}
+
+	// Check Visibility
+	if(user.getUsername() == username){
+		return true;
+	}else if(post.getVisibility() == "public"){
+		return true;
+	} else {
+		vector<string> friends = user.getFriends();
+		for(int f = 0; f < friends.size(); f++){
+			if(friends[f] == username){
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+vector<Post> retrievePosts(string username){
+	vector<Post> visiblePosts;
+	for(int p = 0; p < posts.size(); p++){
+		Post post = posts[p];
+		if(post.getUserID() != username){
+			if(checkVisibility(post.getPostID(), username)){
+				visiblePosts.push_back(post);
+			}
+		}
+	}
+	return visiblePosts;
+}
+
+vector<User> searchUsersByLocation(string location){
+	vector<User> stateBasedUsers;
+	for(int u = 0; u < users.size(); u++){
+		if(users[u].getState() == location){
+			stateBasedUsers.push_back(users[u]);
+		}
+	}
+	return stateBasedUsers;
+}
+
+
+// Other Functions
+void loadInputData(string usersFile, string postsFile){
+	// User Info
+	ifstream userData(usersFile);
+	string userInfo;
+	while(getline(userData, userInfo)) {
+		// https://www.geeksforgeeks.org/how-to-split-string-by-delimiter-in-cpp/
+		// Create a stringstream object with the input string
+		stringstream userInfoSS(userInfo);
+
+		// Tokenize the input string by semicolon delimiter
+		string info;
+		vector<string> metadata;
+
+		while(getline(userInfoSS, info, ';')) {
+				metadata.push_back(info);
+		}
+
+		// Create a stringstream object with the input string
+		stringstream friendsSSoriginal(metadata[3]);
+
+		string friendsSSstring;
+		string s;
+
+		while(getline(friendsSSoriginal, s, '[')) {
+				friendsSSstring += s;
+		}
+
+		stringstream friendsSSv2(friendsSSstring);
+
+		friendsSSstring = "";
+
+		while(getline(friendsSSv2, s, ']')) {
+				friendsSSstring += s;
+		}
+
+		stringstream friendsSS(friendsSSstring);
+
+		// Tokenize the input string by comma delimiter
+		string friendUsername;
+		vector<string> friends;
+
+		while(getline(friendsSS, friendUsername, ',')) {
+				friends.push_back(friendUsername);
+		}
+
+		users.push_back(User(metadata[0],metadata[1],metadata[2],friends));
+	}
+	
+	// Post Info
+	ifstream postData(postsFile);
+	string postInfo;
+	while(getline(postData, postInfo)){
+		// https://www.geeksforgeeks.org/how-to-split-string-by-delimiter-in-cpp/
+		// Create a stringstream object with the input string
+		stringstream postInfoSS(postInfo);
+
+		// Tokenize the input string by semicolon delimiter
+		string info;
+		vector<string> metadata;
+
+		while(getline(postInfoSS, info, ';')) {
+				metadata.push_back(info);
+		}
+
+		posts.push_back(Post(metadata[0], metadata[1], metadata[2]));
+	}
+}
