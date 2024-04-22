@@ -1,16 +1,19 @@
 import java.util.ArrayList;
 public class User {
+    // Declaration of instance variables
     String username;
     String displayname;
     String state;
     ArrayList<String> friends = new ArrayList<String>();
 
+    //Constructor
     public User(String username, String displayname, String state) {
         this.username = username;
         this.displayname = displayname;
         this.state = state;
     }
 
+    //toString() to offer string representation
     @Override
     public String toString() {
         return "User{" +
@@ -21,6 +24,7 @@ public class User {
                 '}';
     }
 
+    //Getters and Setters
     public String getUsername() {
         return username;
     }

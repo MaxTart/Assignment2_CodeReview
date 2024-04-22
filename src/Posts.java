@@ -1,8 +1,10 @@
 public class Posts {
+    // Declaration of instance variables
     String postID;
     String userID;
     String visibility;
 
+    //toString() to offer string representation
     @Override
     public String toString() {
         return "Posts{" +
@@ -12,12 +14,14 @@ public class Posts {
                 '}';
     }
 
+    //Constructor
     public Posts(String postID, String userID, String visibility) {
         this.postID = postID;
         this.userID = userID;
         this.visibility = visibility;
     }
 
+    //Getters and Setters
     public String getPostID() {
         return postID;
     }

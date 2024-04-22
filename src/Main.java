@@ -24,6 +24,7 @@ public class Main {
             if (input == 1){
                 loadData();
             } else if (input == 2) {
+                // Function to check visibility of a post
                 Scanner sc = new Scanner(System.in);
                 System.out.println("Enter a postID and a username");
                 String postID = sc.nextLine();
@@ -34,13 +35,18 @@ public class Main {
                     System.out.println("Access Denied");
                 }
             } else if(input == 3){
+                // Function to retrieve posts
                 retrievePosts();
             } else if(input == 4){
+                // Function to search users by location
                 searchLocation();
             }
         } while (input != 5);
     }
 
+//* Main Functions *//
+
+// Asks for the file paths of the user and post information files, then loads the data from these files.
     static void loadData(){
         String userInfo, postInfo;
         Scanner prompt = new Scanner(System.in);
@@ -48,6 +54,7 @@ public class Main {
         userInfo = prompt.nextLine();
         System.out.print("Enter the name of the post info file: ");
         postInfo = prompt.nextLine();
+        // Adjusting file paths
         userInfo = "src/" + userInfo;
         postInfo = "src/" + postInfo;
         File userFile = new File(userInfo);
@@ -56,6 +63,7 @@ public class Main {
         String postID, userID, visibility;
         Pattern friendsPattern = Pattern.compile("[\\[\\],]");
         try {
+           // Reading user data
             Scanner sc = new Scanner(userFile);
             sc.useDelimiter("[;\\n]");
             while(sc.hasNext()){
@@ -63,7 +71,6 @@ public class Main {
                 name = sc.next();
                 state = sc.next();
                 friendsList = sc.next();
-//                System.out.println(username + name + state + friendsList);
                 User newUser = new User(username, name, state);
                 String[] preList =  friendsPattern.split(friendsList);
                 newUser.friends = new ArrayList<String>(Arrays.asList(preList));
@@ -76,6 +83,7 @@ public class Main {
         }
 
         try{
+            // Reading post data
             Scanner sc = new Scanner(postsFile);
             sc.useDelimiter("[;\\n]");
             while(sc.hasNext()){
@@ -93,6 +101,7 @@ public class Main {
         }
     }
 
+// Asks for a post ID and a username, then checks if the user can view the post. It outputs "Access Permitted" if access is granted and "Access Denied" otherwise.
     static boolean checkVisibility(String postID, String username){
         for (int i=0; i< postList.size(); i++){
             if (Objects.equals(postID, postList.get(i).getPostID())){
@@ -114,6 +123,7 @@ public class Main {
         return false;
     }
 
+// Asks for a username and retrieves all posts that the user can view, outputting the post IDs.
     static void retrievePosts(){
         Scanner sc = new Scanner(System.in);
         ArrayList<String> visiblePosts = new ArrayList<>();
@@ -130,6 +140,7 @@ public class Main {
         }
     }
 
+// Asks for a state location, retrieves users matching the state, and outputs their display names.
     static void searchLocation(){
         Scanner sc = new Scanner(System.in);
         ArrayList<String> users = new ArrayList<>();
