@@ -1,0 +1,13 @@
+Sample Run
+• Choosing option 1 to load data:
+	- Input the test file names (user-infoMT.txt and post-info.txt)
+• Choosing option 2 to check visibility:
+	- Input post ID: post2, input username: ratboy1
+	- Output: Access Permitted
+• Choosing option 3 to retrieve posts.
+	- Input: ratboy1
+	- Output: post1, post2, post3
+• Choosing option 4 to search for users by location.
+	- Input: NY
+	- Output: Kat Gerl
+• Choosing option 5 to terminate the program.

@@ -1,0 +1,3 @@
+dogman1;Doug Mann;CA;[catgirl1, ratboy1]
+catgirl1;Kat Gerl;NY;[dogman1]
+ratboy1;Rhat Boie;TX;[dogman1]
