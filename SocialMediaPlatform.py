@@ -1,12 +1,23 @@
 class SocialMediaPlatform:
+    ###
+    # Implement the SocialMediaPlatform class here
+    ###
     def __init__(self):
         self.users = {}
         self.posts = {}
 
+	###
+    # Implement load data function here
+	# @param user_file: path to the user information file
+	###
     def load_data(self, user_file, post_file):
         self.load_users(user_file)
         self.load_posts(post_file)
 
+	###
+    # Implement load users function here
+	# @param filepath: path to the user information file
+	###
     def load_users(self, filepath):
         with open(filepath, 'r') as file:
             for line in file:
@@ -17,6 +28,10 @@ class SocialMediaPlatform:
                 friends_list = parts[3].strip('[]').split(',') if parts[3] != '[]' else []
                 self.users[username] = {'display_name': display_name, 'state': state, 'friends': friends_list}
 
+	###
+    # Implement load posts function here
+	# @param filepath: path to the post information file
+	###
     def load_posts(self, filepath):
         with open(filepath, 'r') as file:
             for line in file:
@@ -26,6 +41,12 @@ class SocialMediaPlatform:
                 visibility = parts[2]
                 self.posts[post_id] = {'user_id': user_id, 'visibility': visibility}
 
+	###
+    # Implement check visibility function here
+    # @param post_id: post ID
+	# @param username: username
+	# @return: "Access Permitted" if the post is public or visible to the user's friends, "Access Denied" otherwise
+	###
     def check_visibility(self, post_id, username):
         if post_id in self.posts:
             post = self.posts[post_id]
@@ -35,7 +56,11 @@ class SocialMediaPlatform:
                 if username in self.users[post['user_id']]['friends']:
                     return "Access Permitted"
         return "Access Denied"
-
+	###
+    # Implement retrieve posts function here
+	# @param username: username
+	# @return: list of post IDs that are visible to the user
+	###
     def retrieve_posts(self, username):
         visible_posts = []
         for post_id, post_info in self.posts.items():
@@ -48,9 +73,17 @@ class SocialMediaPlatform:
                     visible_posts.append(post_id)
         return visible_posts
 
+	###
+    # Implement search users by location function here
+	# @param state: state to search for users
+	# @return: list of display names of users that are in the given state
+	###
     def search_users_by_location(self, state):
         return [user_info['display_name'] for username, user_info in self.users.items() if user_info['state'] == state]
 
+###
+# Implement the main function here
+###
 def main():
     platform = SocialMediaPlatform()
     while True:
@@ -62,6 +95,14 @@ def main():
         print("5. Exit")
         choice = input("Choose an option: ")
 
+		###
+		# if choice is 1, load data
+		# if choice is 2, check visibility
+		# if choice is 3, retrieve posts
+		# if choice is 4, search users by location
+		# if choice is 5, exit
+		# else, print invalid option
+		###
         if choice == '1':
             user_file = input("Enter path to the user information file: ")
             post_file = input("Enter path to the post information file: ")
@@ -88,4 +129,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
