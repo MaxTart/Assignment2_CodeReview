@@ -1,0 +1,7 @@
+post1112;goldenlover1;friend
+post2123;whiskerwatcher;friend
+post3298;petpal4ever;public
+post4000;furfriendz;public
+post5000;catniplover;public
+post6000;dogdays;friend
+post7000;whiskerwatcher;public
