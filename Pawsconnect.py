@@ -1,5 +1,6 @@
 class Pawsconnect:
         
+        """The parse_user function extracts user data from a file to the directory"""
     def parse_users(self,filename):
         users = {}
         with open(filename, 'r') as file:
@@ -14,6 +15,8 @@ class Pawsconnect:
                 }
         return users
 
+
+        """The parse_post function extracts post data from a file to the directory"""
     def parse_posts(self,filename):
         posts = {}
         with open(filename, 'r') as file:
@@ -26,26 +29,29 @@ class Pawsconnect:
                 }
         return posts
 
+'''can_view_post function determines whether a user can access a post. This is based on it's visibility settings of the post.'''
     def can_view_post(self,post_id, username, users, posts):
         post = posts.get(post_id)
         if not post:
             return "Access Denied"
-        if post['visibility'] == 'public':
+        if post['visibility'] == 'public': #public post are visible to everyone
             return "Access Permitted"
-        if post['visibility'] == 'friend' and username in users[post['user_id']]['friends']:
+        if post['visibility'] == 'friend' and username in users[post['user_id']]['friends']: #friend post are only visible to poeple in their friend list
             return "Access Permitted"
         return "Access Denied"
 
+'''get_accessible_posts let the user get all the post that are accessible to them excluding their own posts.'''
     def get_accessible_posts(self,username, users, posts):
         accessible_posts = []
         user_friends = users[username]['friends'] if username in users else []
         for post_id, post in posts.items():
             if post['user_id'] == username:
                 continue
-            if post['visibility'] == 'public' or (post['visibility'] == 'friend' and username in user_friends):
+            if post['visibility'] == 'public' or (post['visibility'] == 'friend' and username in user_friends): #Here friend posts are accessible only if the user is a friend and public post are accessible to all
                 accessible_posts.append(post_id)
         return accessible_posts
 
+'''Gives information of the user based on their state of residence.'''
     def find_users_by_state(self,state, users):
         return [details['display_name'] for username, details in users.items() if details['state'] == state]
 
